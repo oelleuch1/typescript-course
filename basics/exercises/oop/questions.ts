@@ -7,7 +7,18 @@
 // returns the "idCounter" value.
 
 // Your code here
+abstract class BaseEntity {
+    static idCounter: number = 0
+    id: number 
 
+    constructor(id: number) {
+        this.id = id
+    }
+
+    static generateId(): number {
+        return ++this.idCounter
+    }
+}
 // Exercise 2: Make the "Customer", "Product", "Order", and "Inventory" classes extend "BaseEntity".
 // Update their constructors to call the "super()" method with a generated ID. Remove the "id" parameter from
 // their constructors.
