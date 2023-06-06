@@ -51,32 +51,26 @@ function applyDiscount(product: Product, percentage: number): Product {
 
 // Your code here
 class Order {
-    id: number;
-    customer: Customer;
-    products: Array<Product>;
-
-    constructor(id: number, customer: Customer, products: Array<Product>) {
-    this.id = id;
-    this.customer = customer;
-    this.products = products;
-    }
+    constructor(public id: number, public customer: Customer, public products: Array<Product>) {}
 
     addProduct(product: Product): void {
         this.products.push(product);
     }
 
     removeProduct(productId: number): void {
-        this.products.filter(product => product.id !== productId)
+        this.products = this.products.filter(product => product.id !== productId)
     }
+
+    // Order #100
+    // S1: 102.5
+    // S2: 10.6
+    // Total: 400.9
 
     getTotal(): number {
-        const total = []
-        this.products.every(product => total.push(product.price))
-        total +=
-        return 
+        // let total = 0
+        return this.products.reduce((total, product) => total + product.price, 0)
+        // return this.products
     }
-
-
 
 }
 // Exercise 6: Create a class named "Inventory" with a property "products" (an array of Product)
@@ -88,29 +82,29 @@ class Order {
 
 // Your code here
 class Inventory {
-    products: Array<Product>
 
-    constructor(products: Product[]) {
-        this.products = products;
-    }
+    constructor(public products: Product[]) {}
 
     addProduct(product: Product): void {
         this.products.push(product);
     }
 
     removeProduct(productId: number): void {
-    this.products = this.products.filter(product => product.id !== productId);
+        this.products = this.products.filter(product => product.id !== productId);
     }
 
     findProductById(productId: number): Product | undefined {
         return this.products.find(product => product.id === productId);
     }
 
-    findProductsByCategory(category: string): Product[] {
+    findProductsByCategory(category: ProductCategory): Product[] {
         return this.products.filter(product => product.category === category)
     }
 
+    // findProductsByCategory(ProductCategory.Electronics)
+
 }
+
 // Exercise 7: Create a class named "eCommerce" with properties "customers" (an array of Customer),
 // "orders" (an array of Order), and "inventory" (an instance of Inventory)
 // Implement the following methods:
@@ -121,27 +115,40 @@ class Inventory {
 // Your code here
 class eCommerce {
 
-    customers: Customer[];
-    orders: Order[];
-    inventory: Inventory;
+    constructor(public customers: Customer[], public orders: Array<Order>, public inventory: Inventory) {}
 
-    constructor(customers: Array<Customer>, orders: Array<Order>, inventory: Inventory) {
-        this.customers = customers;
-        this.orders = orders;
-        this.inventory = inventory;
-      }
-
-      registerCustomer(customer: Customer): void {
+    registerCustomer(customer: Customer): void {
         this.customers.push(customer);
-      }
+    }
 
-      placeOrder(customerId: number, productIds: number): void {
+    placeOrder(customerId: number, productIds: number[]): void {
+        //id: number, public customer: Customer, public products: Array<Product>
+        // this.orders = []
+        // this.orders.push(customerId)
+        // this.orders.push(productIds)
 
-      }
+        // Order = (orderId, customer: Customer, products: Products[])
 
-      cancelOrder(orderId: number): void {
+        const orderId: number = Math.floor(Math.random() * 1000) // => random value between 0 and 1000
+        const customerFound = this.customers.find(customer => customer.id === customerId)
+        const customer: Customer = customerFound ?? new Customer(customerId, 'fistname', 'lastname', 'email@gmail.com')
+
+        
+       /** make it better: findProductById => findProductByIds **/ 
+       // const products = this.inventory.findProductByIds(productIds)
+
+       const products: Product[] = []
+        productIds.forEach(productId => {
+        const product = this.inventory.findProductById(productId) ?? { id: productId, name: 'name', price: 0, category: ProductCategory.Electronics }
+        products.push(product)
+       })
+
+       this.orders.push(new Order(orderId, customer, products))
+    }
+
+    cancelOrder(orderId: number): void {
         this.orders = this.orders.filter(order => order.id !== orderId);
-      }
+    }
 }
 // Exercise 8: Instantiate the eCommerce class, register a few customers, add some products to the inventory,
 // place orders, and cancel an order. Check if the methods are working as expected.
@@ -152,3 +159,6 @@ class eCommerce {
 // why void?
 // difference btw two constructors
 // Array / []
+
+// const x: Array<number> = [1, 6, "6"]
+// const y = number[] = [1, 2, 2]
