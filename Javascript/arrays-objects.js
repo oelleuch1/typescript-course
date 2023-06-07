@@ -8,9 +8,19 @@ const users = [
   { userID: "U2", tasks: ["task3", "task4", "task5"] },
 ];
 
+const userId = users.map((user) => user.userID);
+console.log(userId);
 /* 2.
 Given an array of products in an eCommerce site with a product ID, price, and sizes available:
 Find the product with the product ID "P1". */
+const products = [
+  { productId: "P1", price: 10, sizes: ["S", "M", "L"] },
+  { productId: "P2", price: 15, sizes: ["S"] },
+  { productId: "P3", price: 20, sizes: ["M", "L"] },
+]
+
+const productId = products.find((product) => product.productId === "P1")
+console.log(productId);
 
 /* 3.
 Given an array of patients in a healthcare system each with a patientId and list of visits, each visit having a date and doctor's note:
@@ -30,6 +40,9 @@ const patients = [
   },
 ];
 
+const newVisit = patients.find((patient) => patient.patientId === "PA");
+newVisit.visits.push({ date: "2023-04-01", note: "Vaccination" });
+console.log(patients);
 /* 4.
 Given an array of media files, each with a fileId, size, and list of tags:
 Add a new tag "birthday" to the file with fileId "F2". */
@@ -39,11 +52,22 @@ const files = [
   { fileId: "F2", size: 30, tags: ["family", "winter", "holiday"] },
 ];
 
+const newTag = files.find((file) => file.fileId === "F2");
+newTag.tags.push("birthday");
+console.log(files);
 /* 5.
 Given an array of account objects each with accountId, a balance, and list of transactions, each transaction having a date and amount:
 [{ accountId: "A1", balance: 1000, transactions: [{ date: "2023-01-01", amount: 200 }, { date: "2023-02-01", amount: -100 }] }]
 Add a new transaction for account "A1" on "2023-03-01" with the amount 500. */
 
+const accounts = [
+  { accountId: "A1", balance: 1000, transactions: [{ date: "2023-01-01", amount: 200 }, { date: "2023-02-01", amount: -100 }] },
+  { accountId: "A2", balance: 2000, transactions: [{ date: "2023-02-01", amount: 300 }, { date: "2023-03-01", amount: -200 }] },
+]
+
+const accountId = accounts.find((account) => account.accountId === "A1");
+accountId.transactions.push({ date: "2023-03-01", amount: 500 });
+console.log(accounts);
 /* 6.
 Given an array of book objects in a library each with a title, author and borrowers, each borrower having a name and return date:
 [{ title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2023-04-01" }] }]
