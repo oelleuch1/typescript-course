@@ -73,21 +73,65 @@ Given an array of book objects in a library each with a title, author and borrow
 [{ title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2023-04-01" }] }]
 Find the borrower who has kept a book the longest. */
 
+const books = [
+  { title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2020-04-01" }] },
+  { title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2022-04-01" }] },
+  { title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2021-04-01" }] },
+  { title: "Book1", author: "Author1", borrowers: [{ name: "Borrower1", returnDate: "2023-04-01" }] },
+]
+
+const borrowerSearch = books.map((book) => book.borrowers[0].returnDate).sort((a, b) => a - b);
+
+console.log(borrowerSearch[0]);
 /* 7.
 Given an array of patients in a healthcare system each with a patientId and list of visits, each visit having a date and doctor's note:
 [{ patientId: "PA", visits: [{ date: "2023-01-01", note: "Routine check-up" }] }, { patientId: "PB", visits: [{ date: "2023-02-01", note: "Surgery" }, { date: "2023-03-01", note: "Follow-up" }] }]
 Find all patients who have had a surgery. */
 
+const patients = [
+  { patientId: "PA", visits: [{ date: "2023-01-01", note: "Routine check-up" }] },
+  { patientId: "PB", visits: [{ date: "2023-02-01", note: "Surgery" }, { date: "2023-03-01", note: "Follow-up" }] },
+  { patientId: "PC", visits: [{ date: "2023-02-01", note: "Surgery" }, { date: "2023-03-01", note: "Follow-up" }] },
+]
+
+const surgery = patients.filter((patient) => patient.visits.some((visit) => visit.note === "Surgery"));
+const operatedPatients = surgery.map((patient) => patient.patientId);
+
+console.log(operatedPatients);
 /* 8.
 Given an array of eCommerce products each with a productId, price, and sizes:
 [{ productId: "P1", price: 100, sizes: ["S", "M", "L"] }, { productId: "P2", price: 200, sizes: ["M", "L", "XL"] }]
 Find the total number of sizes available across all products. */
 
+const products = [
+  { productId: "P1", price: 100, sizes: ["S", "M", "L"] },
+  { productId: "P2", price: 200, sizes: ["M", "L", "XL"] },
+  { productId: "P3", price: 300, sizes: ["S", "M", "L", "XL"] },
+]
+
+const sizes = products.map((product) => product.sizes.length).reduce((acc, curr) => acc + curr);
+
+console.log(sizes);
+??
 /* 9.
 Given an array of bank accounts each with an accountId, balance, and list of transactions (each transaction having a transactionId, type ('credit'/'debit') and amount):
 [{ accountId: "A1", balance: 1000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }] }]
 Find the account with the most transactions. */
 
+const bankAccounts = [
+  { accountId: "A1", balance: 1000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }] },
+  { accountId: "A2", balance: 2000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }, { transactionId: "T3", type: 'debit', amount: 200 }] },
+]
+
+const transactions = bankAccounts.reduce((maxTransactions, currentValue) => {
+  if (currentValue.transactions.length > maxTransactions.transactions.length) {
+    return currentValue;
+  } else {
+    return maxTransactions;
+  }
+})
+
+console.log(transactions)
 /* 10.
 Given an array of users in a system each with a userId, name, and list of messages sent (each message having a messageId, recipientId, and text):
 [{ userId: "U1", name: "User1", messagesSent: [{ messageId: "M1", recipientId: "U2", text: "Hello" }] }]
