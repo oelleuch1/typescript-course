@@ -3,6 +3,9 @@
 // =======================
 
 // Union types: Can be one of several types.
+
+// Username: string number
+
 type ProductID = string | number;
 type UserID = string | number;
 type Review = string | number;
@@ -10,6 +13,8 @@ type Review = string | number;
 
 // Literal types: Restrict a variable to have a specific literal value.
 type OrderStatus = "Pending" | "Shipped" | "Delivered" | "Cancelled";
+
+const orderStatus: OrderStatus = "Pending"
 
 // Object type: Represents an object with specific structure
 type Address = {
@@ -42,6 +47,8 @@ function isStringReview(review: Review): review is string {
   return typeof review === "string";
 }
 
+// console.log(isStringReview(2)) // return false
+
 // Some function that processes reviews
 function processReview(review: Review) {
   if (isStringReview(review)) {
@@ -55,14 +62,27 @@ function processReview(review: Review) {
 // processReview("This product is excellent!");
 // processReview(4.7);
 
+
+class BaseUser {
+  constructor(public id,  public name) {}
+}
+
+class Admin extends BaseUser {
+  constructor(public id, public name, public isAdmin) {
+    super(id, name)
+  }
+}
+
 // Conditional types: Select one of two possible types based on a condition.
-type ReviewSummary = Review extends string
-  ? "Textual Review"
-  : "Numerical Review";
+type ReviewSummary = Admin extends BaseUser ? { sumamry: string } : { date: number }
 
 // Mapped types: Create new types based on transformations of properties in old types.
 // (Avoiding generics per request, using a specific type)
 type ReadonlyProduct = { readonly [K in keyof BasicProduct]: BasicProduct[K] };
+
+const basicProduct: ReadonlyProduct = { id: 10, name: "Basic Product", description: "Desc", price: 15, reviews: [] }
+
+// Throw an error: basicProduct.id = 11
 
 const readOnlyProduct: ReadonlyProduct = {
   id: 1,

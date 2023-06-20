@@ -31,7 +31,7 @@ interface Product {
   category: string;
 }
 
-type ProductInfo = Pick<Product, "name" | "price">;
+type ProductInfo = Pick<Product, "name" | "price">; // { name: string, price: number }
 
 interface User {
   id: number;
@@ -40,7 +40,7 @@ interface User {
   role: string;
 }
 
-type PublicUser = Omit<User, "email" | "role">;
+type PublicUser = Omit<User, "email" | "role">; // { id: number, username: string }
 
 type Car = "sedan" | "suv" | "hatchback";
 type CarInventory = Record<Car, number>;
@@ -63,11 +63,4 @@ function greet(name: string): string {
   return `Hello, ${name}!`;
 }
 
-type Greeting = ReturnType<typeof greet>;
-
-class Person {
-  name: string;
-  constructor(name: string) {
-    this.name = name;
-  }
-}
+type Greeting = ReturnType<typeof greet>; // string
