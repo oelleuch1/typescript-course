@@ -1,83 +1,85 @@
-interface CartItem<T> {
-    id: number;
-    name: string;
-    price: number;
-    quantity: T;
+//=====================
+// Topic: Generics 
+//=====================
+
+interface User {
+    id: number,
+    username: string,
+    password: string,
+    role: 'CUSTOMER' | 'ADMIN'
 }
 
-class ShoppingCart<T extends CartItem<number>> {
-    items: T[];
+// Generic class for representing a result
+class Result<T> {
+  constructor(
+    public success: boolean,
+    public data?: T,
+    public error?: string
+  ) {}
+}
 
-    constructor() {
-        this.items = [];
+// Generic interface for a service
+interface Service<T> {
+  getById(id: number): Result<T>;
+  getAll(): Result<T[]>;
+  create(item: T): Result<T>;
+}
+
+// Implementing the generic interface for User service
+class UserService implements Service<User> {
+  private users: User[] = [];
+  private currentId: number = 1;
+
+  getById(id: number): Result<User> {
+    const user = this.users.find((u) => u.id === id);
+    if (user) {
+      return new Result<User>(true, user);
+    } else {
+      return new Result<User>(false, undefined, "User not found");
     }
+  }
 
-    addItem(item: T) {
-        this.items.push(item);
-    }
+  getAll(): Result<User[]> {
+    return new Result<User[]>(true, this.users);
+  }
 
-    getTotal(): number {
-        const total: number = this.items.reduce((total: number, item: T) => {
-            return total + item.price * item.quantity;
-        }, 0);
-
-        return isNaN(total) ? 0 : total;
-    }
+  create(user: User): Result<User> {
+    user.id = this.currentId++;
+    this.users.push(user);
+    return new Result<User>(true, user);
+  }
 }
 
-const cart1 = new ShoppingCart<CartItem<number>>();
-cart1.addItem({ id: 1, name: "T-shirt", price: 19.99, quantity: 2 });
-cart1.addItem({ id: 2, name: "Jeans", price: 49.99, quantity: 1 });
-console.log(cart1.getTotal()); // 89.97
+// Sample usage of UserService
+const userService = new UserService();
 
-// @ts-ignore
-const cart2 = new ShoppingCart<CartItem<string>>();
-cart2.addItem({ id: 3, name: "Sneakers", price: 79.99, quantity: "1 pair" });
-console.log(cart2.getTotal()); // 79.99
+const newUser: User = {
+  id: 1,
+  username: "john_doe",
+  password: "password",
+  role: "CUSTOMER",
+};
 
-enum ProductCategory {
-    Clothing = "Clothing",
-    Electronics = "Electronics",
+const createUserResult = userService.create(newUser);
+
+if (createUserResult.success) {
+  console.log("User created:", createUserResult.data);
+} else {
+  console.error("Error creating user:", createUserResult.error);
 }
 
-class Product<T extends ProductCategory> {
-    id: number;
-    name: string;
-    price: number;
-    category: T;
+const getUserResult = userService.getById(1);
 
-    constructor(id: number, name: string, price: number, category: T) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.category = category;
-    }
+if (getUserResult.success) {
+  console.log("User retrieved:", getUserResult.data);
+} else {
+  console.error("Error retrieving user:", getUserResult.error);
 }
 
-const tshirt = new Product<ProductCategory.Clothing>(1, "T-shirt", 19.99, ProductCategory.Clothing);
-const iphone = new Product<ProductCategory.Electronics>(2, "iPhone", 999.99, ProductCategory.Electronics);
+const getAllUsersResult = userService.getAll();
 
-interface FilterFn<T> {
-    (item: T): boolean;
+if (getAllUsersResult.success) {
+  console.log("All users:", getAllUsersResult.data);
+} else {
+  console.error("Error retrieving users:", getAllUsersResult.error);
 }
-
-interface FilteredProduct {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-}
-
-const products: FilteredProduct[] = [
-    { id: 1, name: "T-shirt", price: 19.99, category: "Clothing" },
-    { id: 2, name: "Jeans", price: 49.99, category: "Clothing" },
-    { id: 3, name: "Sneakers", price: 79.99, category: "Shoes" },
-    { id: 4, name: "iPhone", price: 999.99, category: "Electronics" },
-];
-
-function filter<T>(items: T[], filterFn: FilterFn<T>): T[] {
-    return items.filter(filterFn);
-}
-
-const filteredProducts = filter<FilteredProduct>(products, (product) => product.price < 50);
-console.log(filteredProducts);
