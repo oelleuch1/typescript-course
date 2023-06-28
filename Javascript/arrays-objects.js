@@ -94,8 +94,8 @@ const patients2 = [
   { patientId: "PC", visits: [{ date: "2023-02-01", note: "Surgery" }, { date: "2023-03-01", note: "Follow-up" }] },
 ]
 
-const surgery = patients.filter((patient) => patient.visits.some((visit) => visit.note === "Surgery"));
-const operatedPatients = surgery.map((patient) => patient.patientId);
+const surgery = patients2.filter(({ visits }) => visits.some(({ note }) => note === "Surgery"));
+const operatedPatients = surgery.map(({ patientId }) => patients.find(patient => patient.patientId === patientId)); // ["PB", "PC"]
 
 // console.log(operatedPatients);
 /* 8.
@@ -104,12 +104,37 @@ Given an array of eCommerce products each with a productId, price, and sizes:
 Find the total number of sizes available across all products. */
 
 const products2 = [
-  { productId: "P1", price: 100, sizes: ["S", "M", "L"] },
-  { productId: "P2", price: 200, sizes: ["M", "L", "XL"] },
-  { productId: "P3", price: 300, sizes: ["S", "M", "L", "XL"] },
+  { productId: "P1", price: 100, sizes: ["S", "M", "L"] }, // 3
+  { productId: "P2", price: 200, sizes: ["M", "L", "XL"] }, // 3
+  { productId: "P3", price: 300, sizes: ["S", "M", "L", "XL"] }, // 4
 ]
 
-const sizes = products.map((product) => product.sizes.length).reduce((acc, curr) => acc + curr);
+const sizes = products2.map((product) => product.sizes.length).reduce((acc, curr) => acc + curr);
+
+// Set { 1, 2, 3 }
+// new Set() => {} add(1) => { 1 } ; add(1) { 1 }
+
+/** const allSizes = new Set()
+
+products2.forEach(({ sizes }) => {
+  sizes.forEach(size => {
+    allSizes.add(size)
+  })
+})
+
+console.log(allSizes.size) **/
+
+const allSizes = []
+
+products2.forEach(({ sizes }) => {
+  sizes.forEach(size => {
+    if (!allSizes.includes(size)) {
+      allSizes.push(size)
+    }
+  })
+})
+
+console.log(allSizes.length)
 
 // console.log(sizes);
 /* 9.
@@ -120,17 +145,23 @@ Find the account with the most transactions. */
 const bankAccounts = [
   { accountId: "A1", balance: 1000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }] },
   { accountId: "A2", balance: 2000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }, { transactionId: "T3", type: 'debit', amount: 200 }] },
+  { accountId: "A3", balance: 2000, transactions: [{ transactionId: "T2", type: 'debit', amount: 200 }] },
+  { accountId: "A4", balance: 2000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }, { transactionId: "T3", type: 'debit', amount: 200 }] },
+  { accountId: "A5", balance: 2000, transactions: [{ transactionId: "T1", type: 'credit', amount: 500 }, { transactionId: "T2", type: 'debit', amount: 200 }, { transactionId: "T3", type: 'debit', amount: 200 }] },
 ]
 
 const transactions = bankAccounts.reduce((maxTransactions, currentValue) => {
-  if (currentValue.transactions.length > maxTransactions.transactions.length) {
+  if (currentValue.transactions.length >= maxTransactions.transactions.length) {
     return currentValue;
   } else {
     return maxTransactions;
   }
 })
 
-// console.log(transactions)
+
+const maxTransactions = Math.max(...bankAccounts.map(({ transactions }) => transactions.length))
+const AllTransactions = bankAccounts.filter(({ transactions }) => transactions.length === maxTransactions)
+
 /* 10.
 Given an array of users in a system each with a userId, name, and list of messages sent (each message having a messageId, recipientId, and text):
 [{ userId: "U1", name: "User1", messagesSent: [{ messageId: "M1", recipientId: "U2", text: "Hello" }] }]
