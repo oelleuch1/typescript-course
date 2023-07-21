@@ -1,16 +1,27 @@
 // 1. Define a type called 'Product' with properties: id (number), name (string), price (number), and category (string).
+    type Product = {
+        id: number;
+        name: string;
+        price: number;
+        category: string;
+    }
 
 // 2. We are building a product update feature but the user can update any field of a product independently. 
 //    Define a type that represents this partial product data.
+    type UpdatedProduct = Partial<Product>
+    // does it has to be called PartialProduct??
 
 // 3. Now we want to build a summary card for a product in the UI, but it should only display product id and name. 
 //    Create a type that represents this limited product data.
+    type SummaryCard = Pick<Product, 'id' | 'name'>
 
 // 4. The marketing team wants to promote products without showing their prices. 
 //    Define a type that represents product data without the price.
+    type PromoProduct = Omit<Product, 'price'>
 
 // 5. We are implementing a feature for a super user who can only change the prices of the products. 
 //    Define a type that represents this specific product data.
+    type SuperUserProduct = Pick<CSSMathProduct, 'price'>
 
 // 6. We want to differentiate between different types of products: physical and digital. 
 //    Extend the 'Product' type to incorporate this requirement.
